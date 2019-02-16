@@ -9,8 +9,8 @@ import 'package:flutter/material.dart';
 const double _kActiveFontSize = 14.0;
 const double _kBottomMargin = 8.0;
 
-class BubbleTabBar extends StatefulWidget {
-  BubbleTabBar({
+class BubbleBottomBar extends StatefulWidget {
+  BubbleBottomBar({
     Key key,
     @required this.items,
     this.onTap,
@@ -21,14 +21,14 @@ class BubbleTabBar extends StatefulWidget {
   })  : assert(items != null),
         assert(items.length >= 2),
         assert(
-            items.every((BubbleTabBarItem item) => item.title != null) ==
+            items.every((BubbleBottomBarItem item) => item.title != null) ==
                 true,
             'Every item must have a non-null title',),
         assert(0 <= currentIndex && currentIndex < items.length),
         assert(iconSize != null),
         super(key: key);
 
-  final List<BubbleTabBarItem> items;
+  final List<BubbleBottomBarItem> items;
   final ValueChanged<int> onTap; //stream ? or listener ? callbacks dude
   final int currentIndex;
   final Color fixedColor;
@@ -52,7 +52,7 @@ class _BottomNavigationTile extends StatelessWidget {
     this.indexLabel,
   }) : assert(selected != null);
 
-  final BubbleTabBarItem item;
+  final BubbleBottomBarItem item;
   final Animation<double> animation;
   final double iconSize;
   final VoidCallback onTap;
@@ -136,7 +136,7 @@ class _TileIcon extends StatelessWidget {
   final Animation<double> animation;
   final double iconSize;
   final bool selected;
-  final BubbleTabBarItem item;
+  final BubbleBottomBarItem item;
 
   @override
   Widget build(BuildContext context) {
@@ -176,7 +176,7 @@ class _Label extends StatelessWidget {
   }) : super(key: key);
 
   Animation<double> animation;
-  BubbleTabBarItem item;
+  BubbleBottomBarItem item;
   Color color;
 
   @override
@@ -208,7 +208,7 @@ class _Label extends StatelessWidget {
   }
 }
 
-class _BottomNavigationBarState extends State<BubbleTabBar>
+class _BottomNavigationBarState extends State<BubbleBottomBar>
     with TickerProviderStateMixin {
   List<AnimationController> _controllers = <AnimationController>[];
   List<CurvedAnimation> _animations;
@@ -264,7 +264,7 @@ class _BottomNavigationBarState extends State<BubbleTabBar>
       _flexTween.evaluate(animation);
 
   @override
-  void didUpdateWidget(BubbleTabBar oldWidget) {
+  void didUpdateWidget(BubbleBottomBar oldWidget) {
     super.didUpdateWidget(oldWidget);
 
     if (widget.items.length != oldWidget.items.length) {
@@ -466,8 +466,8 @@ class _RadialPainter extends CustomPainter {
   }
 }
 
-class BubbleTabBarItem {
-  const BubbleTabBarItem({
+class BubbleBottomBarItem {
+  const BubbleBottomBarItem({
     @required this.icon,
     this.title,
     Widget activeIcon,
