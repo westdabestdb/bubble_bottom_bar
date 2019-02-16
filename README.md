@@ -13,7 +13,6 @@ dependencies:
 Now in your Dart code, you can use:
 ```
 import 'package:bubble_bottom_bar/bubble_bottom_bar.dart';
-
 ```
 
 ## Usage
