@@ -1,0 +1,32 @@
+# bubble_bottom_bar / BubbleBottomBar
+
+BubbleBottomBar is a Flutter widget designed by [cubertodesign](https://www.instagram.com/cubertodesign/) and developed by [westdabestdb](https://www.instagram.com/westdabestdb/).
+
+## Getting Started
+Add this to your package's `pubspec.yaml` file:
+```
+...
+dependencies:
+  bubble_bottom_bar ^0.0.1
+```
+
+Now in your Dart code, you can use:
+```
+import 'package:bubble_bottom_bar/bubble_bottom_bar.dart';
+
+```
+
+## Usage
+```
+bottomNavigationBar: BubbleBottomBar(
+          opacity: .2, //sets the background opacity of active BubbleBottomBarItem
+          currentIndex: currentIndex,
+          onTap: changePage,
+          items: [
+            BubbleBottomBarItem(backgroundColor: Colors.red, icon: Icon(Icons.dashboard, color: Colors.black,), activeIcon: Icon(Icons.dashboard, color: Colors.red,), title: Text("Home")),
+            BubbleBottomBarItem(backgroundColor: Colors.deepPurple, icon: Icon(Icons.access_time, color: Colors.black,), activeIcon: Icon(Icons.access_time, color: Colors.deepPurple,), title: Text("Logs")),
+            BubbleBottomBarItem(backgroundColor: Colors.indigo, icon: Icon(Icons.folder_open, color: Colors.black,), activeIcon: Icon(Icons.folder_open, color: Colors.indigo,), title: Text("Folders")),
+            BubbleBottomBarItem(backgroundColor: Colors.green, icon: Icon(Icons.menu, color: Colors.black,), activeIcon: Icon(Icons.menu, color: Colors.green,), title: Text("Menu"))
+          ],
+)
+```
