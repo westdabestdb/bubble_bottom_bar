@@ -1,3 +1,7 @@
+## [0.0.3]
+
+* Fixed version in README.md
+
 ## [0.0.2]
 
 * Release with corrected classes.
