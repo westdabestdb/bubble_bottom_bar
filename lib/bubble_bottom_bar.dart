@@ -335,6 +335,7 @@ class _BottomNavigationBarState extends State<BubbleBottomBar>
           elevation: 8.0,
           child: Padding(
             padding: EdgeInsets.symmetric(
+              vertical: 5,
               horizontal: 10,
             ),
             child: ConstrainedBox(
