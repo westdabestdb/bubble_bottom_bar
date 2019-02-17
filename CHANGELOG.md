@@ -1,3 +1,7 @@
+## [0.0.4]
+
+* Added MIT license.
+
 ## [0.0.3]
 
 * Fixed version in README.md
