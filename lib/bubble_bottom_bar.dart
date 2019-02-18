@@ -175,9 +175,9 @@ class _Label extends StatelessWidget {
     @required this.color,
   }) : super(key: key);
 
-  Animation<double> animation;
-  BubbleBottomBarItem item;
-  Color color;
+  final Animation<double> animation;
+  final BubbleBottomBarItem item;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
