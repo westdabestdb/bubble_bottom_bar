@@ -1,3 +1,7 @@
+## [0.0.5]
+
+* Changed '@immutable' field from not final to final.
+
 ## [0.0.4]
 
 * Added MIT license.
