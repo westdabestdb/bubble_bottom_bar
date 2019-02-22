@@ -1,3 +1,9 @@
+## [1.0.0]
+
+* Major release.
+* Ability to specify elevation of the bubble bottom bar.
+* Ability to specify BorderRadius of the bubble bottom bar.
+
 ## [0.0.5]
 
 * Changed '@immutable' field from not final to final.
