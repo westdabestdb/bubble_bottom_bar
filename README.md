@@ -1,5 +1,7 @@
 # bubble_bottom_bar / BubbleBottomBar
 
+[![pub package](https://img.shields.io/pub/v/webview_flutter.svg)](https://pub.dartlang.org/packages/bubble_bottom_bar/)
+
 BubbleBottomBar is a Flutter widget designed by [cubertodesign](https://www.instagram.com/cubertodesign/) and developed by [westdabestdb](https://www.instagram.com/westdabestdb/).
 
 ![](https://media.giphy.com/media/tK9LhfHJ5qT71d7lYa/giphy.gif)
