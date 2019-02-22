@@ -48,6 +48,8 @@ class _MyHomePageState extends State<MyHomePage> {
         opacity: .2,
         currentIndex: currentIndex,
         onTap: changePage,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+        elevation: 8,
         items: <BubbleBottomBarItem>[
             BubbleBottomBarItem(backgroundColor: Colors.red, icon: Icon(Icons.dashboard, color: Colors.black,), activeIcon: Icon(Icons.dashboard, color: Colors.red,), title: Text("Home")),
             BubbleBottomBarItem(backgroundColor: Colors.deepPurple, icon: Icon(Icons.access_time, color: Colors.black,), activeIcon: Icon(Icons.access_time, color: Colors.deepPurple,), title: Text("Logs")),
@@ -58,3 +60,11 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+
+
+
+
+
+const double _kActiveFontSize = 14.0;
+const double _kBottomMargin = 8.0;
+

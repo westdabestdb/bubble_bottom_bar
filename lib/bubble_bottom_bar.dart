@@ -15,9 +15,10 @@ class BubbleBottomBar extends StatefulWidget {
     @required this.items,
     this.onTap,
     this.currentIndex = 0,
-    this.fixedColor,
     @required this.opacity,
     this.iconSize = 24.0,
+    this.borderRadius,
+    this.elevation,
   })  : assert(items != null),
         assert(items.length >= 2),
         assert(
@@ -31,9 +32,10 @@ class BubbleBottomBar extends StatefulWidget {
   final List<BubbleBottomBarItem> items;
   final ValueChanged<int> onTap; //stream ? or listener ? callbacks dude
   final int currentIndex;
-  final Color fixedColor;
   final double iconSize;
   final double opacity;
+  final BorderRadius borderRadius;
+  final double elevation;
 
   @override
   _BottomNavigationBarState createState() => _BottomNavigationBarState();
@@ -68,8 +70,8 @@ class _BottomNavigationTile extends StatelessWidget {
     Widget label;
 
     size = (flex * 1000.0).round();
-    label = _Label(
-        animation: animation, item: item, color: item.backgroundColor);
+    label =
+        _Label(animation: animation, item: item, color: item.backgroundColor);
 
     return Expanded(
       flex: size,
@@ -166,7 +168,6 @@ class _TileIcon extends StatelessWidget {
   }
 }
 
-
 class _Label extends StatelessWidget {
   _Label({
     Key key,
@@ -249,8 +250,7 @@ class _BottomNavigationBarState extends State<BubbleBottomBar>
   }
 
   void _rebuild() {
-    setState(() {
-    });
+    setState(() {});
   }
 
   @override
@@ -327,10 +327,10 @@ class _BottomNavigationBarState extends State<BubbleBottomBar>
       explicitChildNodes: true,
       child: Material(
           color: Colors.white,
-          borderRadius: BorderRadius.vertical(
-            top: Radius.circular(16),
-          ),
-          elevation: 8.0,
+          borderRadius: widget.borderRadius != null
+              ? widget.borderRadius
+              : BorderRadius.zero,
+          elevation: widget.elevation != null ? widget.elevation : 8.0,
           child: Padding(
             padding: EdgeInsets.symmetric(
               horizontal: 10,
@@ -472,7 +472,7 @@ class BubbleBottomBarItem {
     this.title,
     Widget activeIcon,
     this.backgroundColor,
-  }) : activeIcon = activeIcon ?? icon,
+  })  : activeIcon = activeIcon ?? icon,
         assert(icon != null);
   final Widget icon;
   final Widget activeIcon;
