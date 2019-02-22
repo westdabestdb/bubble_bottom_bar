@@ -60,11 +60,3 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
-
-
-
-
-
-const double _kActiveFontSize = 14.0;
-const double _kBottomMargin = 8.0;
-
