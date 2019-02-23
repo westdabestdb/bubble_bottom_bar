@@ -19,7 +19,7 @@ class BubbleBottomBar extends StatefulWidget {
     this.iconSize = 24.0,
     this.borderRadius,
     this.elevation,
-    this.color
+    this.backgroundColor
   })  : assert(items != null),
         assert(items.length >= 2),
         assert(
@@ -37,7 +37,7 @@ class BubbleBottomBar extends StatefulWidget {
   final double opacity;
   final BorderRadius borderRadius;
   final double elevation;
-  final Color color;
+  final Color backgroundColor;
 
   @override
   _BottomNavigationBarState createState() => _BottomNavigationBarState();
@@ -328,7 +328,7 @@ class _BottomNavigationBarState extends State<BubbleBottomBar>
     return Semantics(
       explicitChildNodes: true,
       child: Material(
-          color: widget.color != null ? widget.color : Colors.white,
+          color: widget.backgroundColor != null ? widget.backgroundColor : Colors.white,
           borderRadius: widget.borderRadius != null
               ? widget.borderRadius
               : BorderRadius.zero,
