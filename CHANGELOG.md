@@ -1,3 +1,7 @@
+## [1.0.1]
+
+* Added dev channel support and lowered the required Dart SDK version.
+
 ## [1.0.0]
 
 * Major release.
