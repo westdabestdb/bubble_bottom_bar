@@ -1,3 +1,7 @@
+## [1.0.2]
+
+* Release adresses a solution to FlexRender issue with 4+ BubbleBottomBarItems. Issue: [https://github.com/westdabestdb/bubble_bottom_bar/issues/6](https://github.com/westdabestdb/bubble_bottom_bar/issues/6).
+
 ## [1.0.1]
 
 * Added dev channel support and lowered the required Dart SDK version.
