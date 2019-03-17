@@ -1,6 +1,5 @@
 library bubble_bottom_bar;
 
-import 'dart:collection' show Queue;
 import 'dart:math' as math;
 
 import 'package:flutter/widgets.dart';
@@ -10,17 +9,17 @@ const double _kActiveFontSize = 14.0;
 const double _kBottomMargin = 8.0;
 
 class BubbleBottomBar extends StatefulWidget {
-  BubbleBottomBar({
-    Key key,
-    @required this.items,
-    this.onTap,
-    this.currentIndex = 0,
-    @required this.opacity,
-    this.iconSize = 24.0,
-    this.borderRadius,
-    this.elevation,
-    this.backgroundColor
-  })  : assert(items != null),
+  BubbleBottomBar(
+      {Key key,
+      @required this.items,
+      this.onTap,
+      this.currentIndex = 0,
+      @required this.opacity,
+      this.iconSize = 24.0,
+      this.borderRadius,
+      this.elevation,
+      this.backgroundColor})
+      : assert(items != null),
         assert(items.length >= 2),
         assert(
             items.every((BubbleBottomBarItem item) => item.title != null) ==
@@ -31,7 +30,7 @@ class BubbleBottomBar extends StatefulWidget {
         super(key: key);
 
   final List<BubbleBottomBarItem> items;
-  final ValueChanged<int> onTap; //stream ? or listener ? callbacks dude
+  final ValueChanged<int> onTap;
   final int currentIndex;
   final double iconSize;
   final double opacity;
@@ -70,7 +69,6 @@ class _BottomNavigationTile extends StatelessWidget {
   Widget build(BuildContext context) {
     int size;
     Widget label;
-
     size = (flex * 1000.0).round();
     label =
         _Label(animation: animation, item: item, color: item.backgroundColor);
@@ -111,7 +109,24 @@ class _BottomNavigationTile extends StatelessWidget {
                       selected: selected,
                       item: item,
                     ),
-                    selected ? label : Container(),
+                    AnimatedCrossFade(
+                      alignment: Alignment(0, 0),
+                      firstChild: label,
+                      secondChild: Container(),
+                      duration: Duration(milliseconds: 200),
+                      sizeCurve: Curves.fastOutSlowIn,
+                      firstCurve: Curves.fastOutSlowIn,
+                      secondCurve: Curves.fastOutSlowIn.flipped,
+                      crossFadeState: selected
+                          ? CrossFadeState.showFirst
+                          : CrossFadeState.showSecond,
+                    )
+//                    Visibility(
+//
+//                      child: label,
+//                      visible: selected,
+//                    ),
+//                    selected ? label : Container()
                   ],
                 ),
               ),
@@ -144,20 +159,12 @@ class _TileIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double tweenStart;
     Color iconColor;
-    tweenStart = 0;
     iconColor = Colors.white;
     return Align(
       alignment: Alignment.topCenter,
       heightFactor: 1.0,
       child: Container(
-        margin: EdgeInsets.only(
-          top: Tween<double>(
-            begin: tweenStart,
-            end: 0,
-          ).evaluate(animation),
-        ),
         child: IconTheme(
           data: IconThemeData(
             color: selected ? item.backgroundColor : iconColor,
@@ -188,12 +195,6 @@ class _Label extends StatelessWidget {
       alignment: Alignment.center,
       heightFactor: 1.0,
       child: Container(
-        margin: EdgeInsets.only(
-          bottom: Tween<double>(
-            begin: 0,
-            end: 0,
-          ).evaluate(animation),
-        ),
         child: FadeTransition(
           alwaysIncludeSemantics: true,
           opacity: animation,
@@ -215,21 +216,18 @@ class _BottomNavigationBarState extends State<BubbleBottomBar>
     with TickerProviderStateMixin {
   List<AnimationController> _controllers = <AnimationController>[];
   List<CurvedAnimation> _animations;
-  final Queue<_Circle> _circles = Queue<_Circle>();
   Color _backgroundColor;
 
   static final Animatable<double> _flexTween =
-      Tween<double>(begin: 1.0, end: 1.5);
+      Tween<double>(begin: .75, end: 1.5);
 
   void _resetState() {
     for (AnimationController controller in _controllers) controller.dispose();
-    for (_Circle circle in _circles) circle.dispose();
-    _circles.clear();
 
     _controllers =
         List<AnimationController>.generate(widget.items.length, (int index) {
       return AnimationController(
-        duration: kThemeAnimationDuration,
+        duration: Duration(milliseconds: 200),
         vsync: this,
       )..addListener(_rebuild);
     });
@@ -258,7 +256,6 @@ class _BottomNavigationBarState extends State<BubbleBottomBar>
   @override
   void dispose() {
     for (AnimationController controller in _controllers) controller.dispose();
-    for (_Circle circle in _circles) circle.dispose();
     super.dispose();
   }
 
@@ -328,7 +325,9 @@ class _BottomNavigationBarState extends State<BubbleBottomBar>
     return Semantics(
       explicitChildNodes: true,
       child: Material(
-          color: widget.backgroundColor != null ? widget.backgroundColor : Colors.white,
+          color: widget.backgroundColor != null
+              ? widget.backgroundColor
+              : Colors.white,
           borderRadius: widget.borderRadius != null
               ? widget.borderRadius
               : BorderRadius.zero,
@@ -341,130 +340,20 @@ class _BottomNavigationBarState extends State<BubbleBottomBar>
               constraints: BoxConstraints(
                   minHeight:
                       kBottomNavigationBarHeight + additionalBottomPadding),
-              child: CustomPaint(
-                painter: _RadialPainter(
-                  circles: _circles.toList(),
-                  textDirection: Directionality.of(context),
-                ),
-                child: Material(
-                  // Splashes.
-                  type: MaterialType.transparency,
-                  child: Padding(
-                    padding: EdgeInsets.only(bottom: additionalBottomPadding),
-                    child: MediaQuery.removePadding(
-                      context: context,
-                      removeBottom: true,
-                      child: _createContainer(_createTiles()),
-                    ),
+              child: Material(
+                type: MaterialType.transparency,
+                child: Padding(
+                  padding: EdgeInsets.only(bottom: additionalBottomPadding),
+                  child: MediaQuery.removePadding(
+                    context: context,
+                    removeBottom: true,
+                    child: _createContainer(_createTiles()),
                   ),
                 ),
               ),
             ),
           )),
     );
-  }
-}
-
-class _Circle {
-  _Circle({
-    @required this.state,
-    @required this.index,
-    @required this.color,
-    @required TickerProvider vsync,
-  })  : assert(state != null),
-        assert(index != null),
-        assert(color != null) {
-    controller = AnimationController(
-      duration: kThemeAnimationDuration,
-      vsync: vsync,
-    );
-    animation = CurvedAnimation(
-      parent: controller,
-      curve: Curves.fastOutSlowIn,
-    );
-    controller.forward();
-  }
-
-  final _BottomNavigationBarState state;
-  final int index;
-  final Color color;
-  AnimationController controller;
-  CurvedAnimation animation;
-
-  double get horizontalLeadingOffset {
-    double weightSum(Iterable<Animation<double>> animations) {
-      return animations
-          .map<double>(state._evaluateFlex)
-          .fold<double>(0.0, (double sum, double value) => sum + value);
-    }
-
-    final double allWeights = weightSum(state._animations);
-    final double leadingWeights =
-        weightSum(state._animations.sublist(0, index));
-
-    return (leadingWeights +
-            state._evaluateFlex(state._animations[index]) / 2.0) /
-        allWeights;
-  }
-
-  void dispose() {
-    controller.dispose();
-  }
-}
-
-class _RadialPainter extends CustomPainter {
-  _RadialPainter({
-    @required this.circles,
-    @required this.textDirection,
-  })  : assert(circles != null),
-        assert(textDirection != null);
-
-  final List<_Circle> circles;
-  final TextDirection textDirection;
-
-  static double _maxRadius(Offset center, Size size) {
-    final double maxX = math.max(center.dx, size.width - center.dx);
-    final double maxY = math.max(center.dy, size.height - center.dy);
-    return math.sqrt(maxX * maxX + maxY * maxY);
-  }
-
-  @override
-  bool shouldRepaint(_RadialPainter oldPainter) {
-    if (textDirection != oldPainter.textDirection) return true;
-    if (circles == oldPainter.circles) return false;
-    if (circles.length != oldPainter.circles.length) return true;
-    for (int i = 0; i < circles.length; i += 1)
-      if (circles[i] != oldPainter.circles[i]) return true;
-    return false;
-  }
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    for (_Circle circle in circles) {
-      final Paint paint = Paint()..color = circle.color;
-      final Rect rect = Rect.fromLTWH(0.0, 0.0, size.width, size.height);
-      canvas.clipRect(rect);
-      double leftFraction;
-      switch (textDirection) {
-        case TextDirection.rtl:
-          leftFraction = 1.0 - circle.horizontalLeadingOffset;
-          break;
-        case TextDirection.ltr:
-          leftFraction = circle.horizontalLeadingOffset;
-          break;
-      }
-      final Offset center =
-          Offset(leftFraction * size.width, size.height / 2.0);
-      final Tween<double> radiusTween = Tween<double>(
-        begin: 0.0,
-        end: _maxRadius(center, size),
-      );
-      canvas.drawCircle(
-        center,
-        radiusTween.transform(circle.animation.value),
-        paint,
-      );
-    }
   }
 }
 
