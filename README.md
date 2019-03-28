@@ -17,7 +17,7 @@ Add this to your package's `pubspec.yaml` file:
 ```
 ...
 dependencies:
-  bubble_bottom_bar: ^1.0.2
+  bubble_bottom_bar: ^1.1.0
 ```
 
 Now in your Dart code, you can use:
