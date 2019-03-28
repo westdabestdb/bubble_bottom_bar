@@ -3,13 +3,14 @@
 BubbleBottomBar is a Flutter widget designed by [cubertodesign](https://www.instagram.com/cubertodesign/) and developed by [westdabestdb](https://www.instagram.com/westdabestdb/).
 
 ![](https://media.giphy.com/media/tK9LhfHJ5qT71d7lYa/giphy.gif)
-
+<p float="left">
 <img src="https://imgur.com/jRAX03A.jpg" width="420px"/>
 <img src="https://imgur.com/o8YNzu9.jpg" width="435px"/>
-<br>
+
+<p float="left">
 <img src="https://imgur.com/bD0UEfK.jpg" width="420px"/>
 <img src="https://imgur.com/fSmPWdI.jpg" width="435px"/>
-<br>
+</p>
 
 ## Getting Started
 Add this to your package's `pubspec.yaml` file:
