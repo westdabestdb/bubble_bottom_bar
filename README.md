@@ -9,7 +9,7 @@ BubbleBottomBar is a Flutter widget designed by [cubertodesign](https://www.inst
 
 <p float="left">
 <img src="https://imgur.com/bD0UEfK.jpg" width="420px"/>
-<img src="https://imgur.com/fSmPWdI.jpg" width="435px"/>
+<img src="https://imgur.com/zuPH2rJ.jpg" width="435px"/>
 </p>
 
 ## Getting Started
