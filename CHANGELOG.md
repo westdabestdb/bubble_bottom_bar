@@ -1,3 +1,12 @@
+## [1.1.0]
+
+* Floating Action Button Support 🎊 🎉 !
+* `fabLocation: BubbleBottomBarFabLocation.end` is to support end docked fab.
+* `fabLocation: BubbleBottomBarFabLocation.center` is to support center docked fab.
+* `hasNotch: true` gives nice notch cutout to BubbleBottomBar.
+* *hasNotch* and *borderRadius* cannot be used together, yet 😏
+* Maximum number of the items must be 4 when docked fab support is actived.
+
 ## [1.0.2]
 
 * Release adresses a solution to FlexRender issue with 4+ BubbleBottomBarItems. Issue: [https://github.com/westdabestdb/bubble_bottom_bar/issues/6](https://github.com/westdabestdb/bubble_bottom_bar/issues/6).
