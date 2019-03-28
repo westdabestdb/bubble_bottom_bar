@@ -2,11 +2,13 @@ library bubble_bottom_bar;
 
 import 'dart:math' as math;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 
 const double _kActiveFontSize = 14.0;
 const double _kBottomMargin = 8.0;
+enum BubbleBottomBarFabLocation { end, center }
 
 class BubbleBottomBar extends StatefulWidget {
   BubbleBottomBar(
@@ -18,7 +20,9 @@ class BubbleBottomBar extends StatefulWidget {
       this.iconSize = 24.0,
       this.borderRadius,
       this.elevation,
-      this.backgroundColor})
+      this.backgroundColor,
+      this.hasNotch = false,
+      this.fabLocation})
       : assert(items != null),
         assert(items.length >= 2),
         assert(
@@ -30,13 +34,15 @@ class BubbleBottomBar extends StatefulWidget {
         super(key: key);
 
   final List<BubbleBottomBarItem> items;
-  final ValueChanged<int> onTap;
-  final int currentIndex;
+  final ValueChanged<int> onTap; //stream ? or listener ? callbacks dude
+  int currentIndex;
   final double iconSize;
   final double opacity;
   final BorderRadius borderRadius;
   final double elevation;
   final Color backgroundColor;
+  final bool hasNotch;
+  final BubbleBottomBarFabLocation fabLocation;
 
   @override
   _BottomNavigationBarState createState() => _BottomNavigationBarState();
@@ -70,8 +76,11 @@ class _BottomNavigationTile extends StatelessWidget {
     int size;
     Widget label;
     size = (flex * 1000.0).round();
-    label =
-        _Label(animation: animation, item: item, color: item.backgroundColor);
+    label = _Label(
+      animation: animation,
+      item: item,
+      color: item.backgroundColor,
+    );
 
     return Expanded(
       flex: size,
@@ -121,12 +130,6 @@ class _BottomNavigationTile extends StatelessWidget {
                           ? CrossFadeState.showFirst
                           : CrossFadeState.showSecond,
                     )
-//                    Visibility(
-//
-//                      child: label,
-//                      visible: selected,
-//                    ),
-//                    selected ? label : Container()
                   ],
                 ),
               ),
@@ -217,9 +220,16 @@ class _BottomNavigationBarState extends State<BubbleBottomBar>
   List<AnimationController> _controllers = <AnimationController>[];
   List<CurvedAnimation> _animations;
   Color _backgroundColor;
+  ValueListenable<ScaffoldGeometry> geometryListenable;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    geometryListenable = Scaffold.geometryOf(context);
+  }
 
   static final Animatable<double> _flexTween =
-      Tween<double>(begin: .75, end: 1.5);
+      Tween<double>(begin: .75, end: 2.25);
 
   void _resetState() {
     for (AnimationController controller in _controllers) controller.dispose();
@@ -274,6 +284,18 @@ class _BottomNavigationBarState extends State<BubbleBottomBar>
     if (widget.currentIndex != oldWidget.currentIndex) {
       _controllers[oldWidget.currentIndex].reverse();
       _controllers[widget.currentIndex].forward();
+
+      if (widget.fabLocation == BubbleBottomBarFabLocation.center) {
+        BubbleBottomBarItem _currentItem = widget.items[oldWidget.currentIndex];
+        BubbleBottomBarItem _nextItem = widget.items[widget.currentIndex];
+
+        widget.items[0] = _nextItem;
+        widget.items[widget.currentIndex] = _currentItem;
+        _controllers[oldWidget.currentIndex].reverse();
+        _controllers[widget.currentIndex].forward();
+        widget.currentIndex = 0;
+        _resetState();
+      }
     } else {
       if (_backgroundColor != widget.items[widget.currentIndex].backgroundColor)
         _backgroundColor = widget.items[widget.currentIndex].backgroundColor;
@@ -302,6 +324,13 @@ class _BottomNavigationBarState extends State<BubbleBottomBar>
         ),
       );
     }
+    if (widget.fabLocation == BubbleBottomBarFabLocation.center) {
+      children.insert(
+          1,
+          Spacer(
+            flex: 1500,
+          ));
+    }
     return children;
   }
 
@@ -315,45 +344,65 @@ class _BottomNavigationBarState extends State<BubbleBottomBar>
     );
   }
 
+  Widget _inner(double additionalBottomPadding) {
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal: 10,
+      ),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+            minHeight: kBottomNavigationBarHeight + additionalBottomPadding),
+        child: Material(
+          type: MaterialType.transparency,
+          child: Padding(
+            padding: EdgeInsets.only(
+                bottom: additionalBottomPadding,
+                right: widget.fabLocation == BubbleBottomBarFabLocation.end
+//                    MediaQuery.of(context).size.width * 2 / 3 < _fabCenter
+                    ? 72
+                    : 0),
+            child: MediaQuery.removePadding(
+              context: context,
+              removeBottom: true,
+              child: _createContainer(_createTiles()),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasDirectionality(context));
     assert(debugCheckHasMaterialLocalizations(context));
-
     final double additionalBottomPadding =
         math.max(MediaQuery.of(context).padding.bottom - _kBottomMargin, 0.0);
     return Semantics(
-      explicitChildNodes: true,
-      child: Material(
-          color: widget.backgroundColor != null
-              ? widget.backgroundColor
-              : Colors.white,
-          borderRadius: widget.borderRadius != null
-              ? widget.borderRadius
-              : BorderRadius.zero,
-          elevation: widget.elevation != null ? widget.elevation : 8.0,
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: 10,
-            ),
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                  minHeight:
-                      kBottomNavigationBarHeight + additionalBottomPadding),
-              child: Material(
-                type: MaterialType.transparency,
-                child: Padding(
-                  padding: EdgeInsets.only(bottom: additionalBottomPadding),
-                  child: MediaQuery.removePadding(
-                    context: context,
-                    removeBottom: true,
-                    child: _createContainer(_createTiles()),
-                  ),
+        explicitChildNodes: true,
+        child: widget.hasNotch
+            ? PhysicalShape(
+                elevation: widget.elevation != null ? widget.elevation : 8.0,
+                color: widget.backgroundColor != null
+                    ? widget.backgroundColor
+                    : Colors.white,
+                clipper: _BubbleBottomBarClipper(
+                  shape: CircularNotchedRectangle(),
+                  geometry: geometryListenable,
+                  notchMargin: 8,
                 ),
-              ),
-            ),
-          )),
-    );
+                child: _inner(additionalBottomPadding),
+              )
+            : Material(
+                elevation: widget.elevation != null ? widget.elevation : 8.0,
+                color: widget.backgroundColor != null
+                    ? widget.backgroundColor
+                    : Colors.white,
+                child: _inner(additionalBottomPadding),
+                borderRadius: widget.borderRadius != null
+                    ? widget.borderRadius
+                    : BorderRadius.zero,
+              ));
   }
 }
 
@@ -369,4 +418,36 @@ class BubbleBottomBarItem {
   final Widget activeIcon;
   final Widget title;
   final Color backgroundColor;
+}
+
+class _BubbleBottomBarClipper extends CustomClipper<Path> {
+  const _BubbleBottomBarClipper({
+    @required this.geometry,
+    @required this.shape,
+    @required this.notchMargin,
+  })  : assert(geometry != null),
+        assert(shape != null),
+        assert(notchMargin != null),
+        super(reclip: geometry);
+
+  final ValueListenable<ScaffoldGeometry> geometry;
+  final NotchedShape shape;
+  final double notchMargin;
+
+  @override
+  Path getClip(Size size) {
+    final Rect button = geometry.value.floatingActionButtonArea?.translate(
+      0.0,
+      geometry.value.bottomNavigationBarTop * -1.0,
+    );
+
+    return shape.getOuterPath(Offset.zero & size, button?.inflate(notchMargin));
+  }
+
+  @override
+  bool shouldReclip(_BubbleBottomBarClipper oldClipper) {
+    return oldClipper.geometry != geometry ||
+        oldClipper.shape != shape ||
+        oldClipper.notchMargin != notchMargin;
+  }
 }
