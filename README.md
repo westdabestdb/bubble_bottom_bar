@@ -3,6 +3,14 @@
 BubbleBottomBar is a Flutter widget designed by [cubertodesign](https://www.instagram.com/cubertodesign/) and developed by [westdabestdb](https://www.instagram.com/westdabestdb/).
 
 ![](https://media.giphy.com/media/tK9LhfHJ5qT71d7lYa/giphy.gif)
+
+<img src="https://imgur.com/jRAX03A.jpg" width="420px"/>
+<img src="https://imgur.com/o8YNzu9.jpg" width="435px"/>
+<br>
+<img src="https://imgur.com/bD0UEfK.jpg" width="420px"/>
+<img src="https://imgur.com/fSmPWdI.jpg" width="435px"/>
+<br>
+
 ## Getting Started
 Add this to your package's `pubspec.yaml` file:
 ```
@@ -24,6 +32,8 @@ bottomNavigationBar: BubbleBottomBar(
         onTap: changePage,
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
         elevation: 8,
+        fabLocation: BubbleBottomBarFabLocation.end, //new
+        hasNotch: true, //new
         items: <BubbleBottomBarItem>[
             BubbleBottomBarItem(backgroundColor: Colors.red, icon: Icon(Icons.dashboard, color: Colors.black,), activeIcon: Icon(Icons.dashboard, color: Colors.red,), title: Text("Home")),
             BubbleBottomBarItem(backgroundColor: Colors.deepPurple, icon: Icon(Icons.access_time, color: Colors.black,), activeIcon: Icon(Icons.access_time, color: Colors.deepPurple,), title: Text("Logs")),
