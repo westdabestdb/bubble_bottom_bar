@@ -17,7 +17,7 @@ Add this to your package's `pubspec.yaml` file:
 ```
 ...
 dependencies:
-  bubble_bottom_bar: ^1.1.0
+  bubble_bottom_bar: ^1.1.1
 ```
 
 Now in your Dart code, you can use:
@@ -27,6 +27,12 @@ import 'package:bubble_bottom_bar/bubble_bottom_bar.dart';
 
 ## Usage
 ```
+floatingActionButton: FloatingActionButton(
+        onPressed: (){},
+        child: Icon(Icons.add),
+        backgroundColor: Colors.red,
+),
+floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
 bottomNavigationBar: BubbleBottomBar(
         opacity: .2,
         currentIndex: currentIndex,
