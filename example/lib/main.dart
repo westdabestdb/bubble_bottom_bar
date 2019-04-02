@@ -27,17 +27,18 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int currentIndex;
   @override
-    void initState() {
-      // TODO: implement initState
-      super.initState();
-      currentIndex = 0;
-    }
-
-  void changePage(int index){
-    setState(() {
-          currentIndex = index;
-        });
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    currentIndex = 0;
   }
+
+  void changePage(int index) {
+    setState(() {
+      currentIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,7 +46,7 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: (){},
+        onPressed: () {},
         child: Icon(Icons.add),
         backgroundColor: Colors.red,
       ),
@@ -56,13 +57,55 @@ class _MyHomePageState extends State<MyHomePage> {
         opacity: .2,
         currentIndex: currentIndex,
         onTap: changePage,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)), //border radius doesn't work when the notch is enabled.
+        borderRadius: BorderRadius.vertical(
+            top: Radius.circular(
+                16)), //border radius doesn't work when the notch is enabled.
         elevation: 8,
         items: <BubbleBottomBarItem>[
-            BubbleBottomBarItem(backgroundColor: Colors.red, icon: Icon(Icons.dashboard, color: Colors.black,), activeIcon: Icon(Icons.dashboard, color: Colors.red,), title: Text("Home")),
-            BubbleBottomBarItem(backgroundColor: Colors.deepPurple, icon: Icon(Icons.access_time, color: Colors.black,), activeIcon: Icon(Icons.access_time, color: Colors.deepPurple,), title: Text("Logs")),
-            BubbleBottomBarItem(backgroundColor: Colors.indigo, icon: Icon(Icons.folder_open, color: Colors.black,), activeIcon: Icon(Icons.folder_open, color: Colors.indigo,), title: Text("Folders")),
-            BubbleBottomBarItem(backgroundColor: Colors.green, icon: Icon(Icons.menu, color: Colors.black,), activeIcon: Icon(Icons.menu, color: Colors.green,), title: Text("Menu"))
+          BubbleBottomBarItem(
+              backgroundColor: Colors.red,
+              icon: Icon(
+                Icons.dashboard,
+                color: Colors.black,
+              ),
+              activeIcon: Icon(
+                Icons.dashboard,
+                color: Colors.red,
+              ),
+              title: Text("Home")),
+          BubbleBottomBarItem(
+              backgroundColor: Colors.deepPurple,
+              icon: Icon(
+                Icons.access_time,
+                color: Colors.black,
+              ),
+              activeIcon: Icon(
+                Icons.access_time,
+                color: Colors.deepPurple,
+              ),
+              title: Text("Logs")),
+          BubbleBottomBarItem(
+              backgroundColor: Colors.indigo,
+              icon: Icon(
+                Icons.folder_open,
+                color: Colors.black,
+              ),
+              activeIcon: Icon(
+                Icons.folder_open,
+                color: Colors.indigo,
+              ),
+              title: Text("Folders")),
+          BubbleBottomBarItem(
+              backgroundColor: Colors.green,
+              icon: Icon(
+                Icons.menu,
+                color: Colors.black,
+              ),
+              activeIcon: Icon(
+                Icons.menu,
+                color: Colors.green,
+              ),
+              title: Text("Menu"))
         ],
       ),
     );
