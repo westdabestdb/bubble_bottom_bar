@@ -44,11 +44,19 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: (){},
+        child: Icon(Icons.add),
+        backgroundColor: Colors.red,
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       bottomNavigationBar: BubbleBottomBar(
+        hasNotch: true,
+        fabLocation: BubbleBottomBarFabLocation.end,
         opacity: .2,
         currentIndex: currentIndex,
         onTap: changePage,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)), //border radius doesn't work when the notch is enabled.
         elevation: 8,
         items: <BubbleBottomBarItem>[
             BubbleBottomBarItem(backgroundColor: Colors.red, icon: Icon(Icons.dashboard, color: Colors.black,), activeIcon: Icon(Icons.dashboard, color: Colors.red,), title: Text("Home")),
