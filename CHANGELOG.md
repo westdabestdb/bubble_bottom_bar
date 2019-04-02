@@ -1,3 +1,7 @@
+## [1.1.1]
+
+* Floating action button added to the example app.
+
 ## [1.1.0]
 
 * Floating Action Button Support 🎊 🎉 !
