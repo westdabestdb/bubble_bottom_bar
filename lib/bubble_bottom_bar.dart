@@ -22,6 +22,8 @@ class BubbleBottomBar extends StatefulWidget {
       this.elevation,
       this.backgroundColor,
       this.hasNotch = false,
+      this.hasInk = false,
+      this.inkColor,
       this.fabLocation})
       : assert(items != null),
         assert(items.length >= 2),
@@ -34,7 +36,7 @@ class BubbleBottomBar extends StatefulWidget {
         super(key: key);
 
   final List<BubbleBottomBarItem> items;
-  final ValueChanged<int> onTap; //stream ? or listener ? callbacks dude
+  final ValueChanged<int> onTap;
   int currentIndex;
   final double iconSize;
   final double opacity;
@@ -42,7 +44,9 @@ class BubbleBottomBar extends StatefulWidget {
   final double elevation;
   final Color backgroundColor;
   final bool hasNotch;
+  final bool hasInk;
   final BubbleBottomBarFabLocation fabLocation;
+  final Color inkColor;
 
   @override
   _BottomNavigationBarState createState() => _BottomNavigationBarState();
@@ -50,16 +54,15 @@ class BubbleBottomBar extends StatefulWidget {
 
 class _BottomNavigationTile extends StatelessWidget {
   const _BottomNavigationTile(
-    this.item,
-    this.opacity,
-    this.animation,
-    this.iconSize, {
-    this.onTap,
-    this.colorTween,
-    this.flex,
-    this.selected = false,
-    this.indexLabel,
-  }) : assert(selected != null);
+      this.item, this.opacity, this.animation, this.iconSize,
+      {this.onTap,
+      this.colorTween,
+      this.flex,
+      this.selected = false,
+      this.indexLabel,
+      this.ink = false,
+      this.inkColor})
+      : assert(selected != null);
 
   final BubbleBottomBarItem item;
   final Animation<double> animation;
@@ -70,6 +73,8 @@ class _BottomNavigationTile extends StatelessWidget {
   final bool selected;
   final String indexLabel;
   final double opacity;
+  final bool ink;
+  final Color inkColor;
 
   @override
   Widget build(BuildContext context) {
@@ -91,8 +96,15 @@ class _BottomNavigationTile extends StatelessWidget {
         child: Stack(
           children: <Widget>[
             InkResponse(
+              borderRadius: BorderRadius.horizontal(
+                right: Radius.circular(50),
+                left: Radius.circular(50),
+              ),
+              containedInkWell: true,
               onTap: onTap,
-              splashColor: Colors.transparent,
+              splashColor: ink
+                  ? inkColor != null ? inkColor : Theme.of(context).splashColor
+                  : Colors.transparent,
               highlightColor: Colors.transparent,
               child: Container(
                 height: 48,
@@ -221,15 +233,20 @@ class _BottomNavigationBarState extends State<BubbleBottomBar>
   List<CurvedAnimation> _animations;
   Color _backgroundColor;
   ValueListenable<ScaffoldGeometry> geometryListenable;
+  bool fabExists = false;
+  BubbleBottomBar holder;
+  Animatable<double> _flexTween;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     geometryListenable = Scaffold.geometryOf(context);
+    _flexTween = widget.hasNotch
+        ? Tween<double>(begin: 1.15, end: 2.0)
+        : Tween<double>(begin: 1.15, end: 1.75);
   }
 
-  static final Animatable<double> _flexTween =
-      Tween<double>(begin: .75, end: 2.25);
+//  Animatable<double> _flexTween = widget.hasNotch ? Tween<double>(begin: 1.15, end: 2.0) : Tween<double>(begin: 1.15, end: 1.75);
 
   void _resetState() {
     for (AnimationController controller in _controllers) controller.dispose();
@@ -321,6 +338,8 @@ class _BottomNavigationBarState extends State<BubbleBottomBar>
           selected: i == widget.currentIndex,
           indexLabel: localizations.tabLabel(
               tabIndex: i + 1, tabCount: widget.items.length),
+          ink: widget.hasInk,
+          inkColor: widget.inkColor,
         ),
       );
     }
@@ -358,7 +377,6 @@ class _BottomNavigationBarState extends State<BubbleBottomBar>
             padding: EdgeInsets.only(
                 bottom: additionalBottomPadding,
                 right: widget.fabLocation == BubbleBottomBarFabLocation.end
-//                    MediaQuery.of(context).size.width * 2 / 3 < _fabCenter
                     ? 72
                     : 0),
             child: MediaQuery.removePadding(
