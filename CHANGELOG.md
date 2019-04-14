@@ -1,3 +1,9 @@
+## [1.2.0]
+
+* Added ink effect. Thanks to [u/VittorioMasia](https://www.reddit.com/user/VittorioMasia) for the idea.
+* Fix for issue: [https://github.com/westdabestdb/bubble_bottom_bar/issues/10](https://github.com/westdabestdb/bubble_bottom_bar/issues/10).
+* Might need a full restart after changing `hasNotch` variable for proper animation & tile sizes.
+
 ## [1.1.1]
 
 * Floating action button added to the example app.

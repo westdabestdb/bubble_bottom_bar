@@ -17,7 +17,7 @@ Add this to your package's `pubspec.yaml` file:
 ```
 ...
 dependencies:
-  bubble_bottom_bar: ^1.1.1
+  bubble_bottom_bar: ^1.2.0
 ```
 
 Now in your Dart code, you can use:
@@ -41,6 +41,8 @@ bottomNavigationBar: BubbleBottomBar(
         elevation: 8,
         fabLocation: BubbleBottomBarFabLocation.end, //new
         hasNotch: true, //new
+        hasInk: true //new, gives a cute ink effect
+        inkColor: Colors.black12 //optional, uses theme color if not specified
         items: <BubbleBottomBarItem>[
             BubbleBottomBarItem(backgroundColor: Colors.red, icon: Icon(Icons.dashboard, color: Colors.black,), activeIcon: Icon(Icons.dashboard, color: Colors.red,), title: Text("Home")),
             BubbleBottomBarItem(backgroundColor: Colors.deepPurple, icon: Icon(Icons.access_time, color: Colors.black,), activeIcon: Icon(Icons.access_time, color: Colors.deepPurple,), title: Text("Logs")),
