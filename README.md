@@ -3,6 +3,7 @@
 BubbleBottomBar is a Flutter widget designed by [cubertodesign](https://www.instagram.com/cubertodesign/) and developed by [westdabestdb](https://www.instagram.com/westdabestdb/).
 
 ![](https://media.giphy.com/media/tK9LhfHJ5qT71d7lYa/giphy.gif)
+
 <p float="left">
 <img src="https://imgur.com/jRAX03A.jpg" width="420px"/>
 <img src="https://imgur.com/o8YNzu9.jpg" width="435px"/>
@@ -13,7 +14,9 @@ BubbleBottomBar is a Flutter widget designed by [cubertodesign](https://www.inst
 </p>
 
 ## Getting Started
+
 Add this to your package's `pubspec.yaml` file:
+
 ```
 ...
 dependencies:
@@ -21,11 +24,13 @@ dependencies:
 ```
 
 Now in your Dart code, you can use:
+
 ```
 import 'package:bubble_bottom_bar/bubble_bottom_bar.dart';
 ```
 
 ## Usage
+
 ```
 floatingActionButton: FloatingActionButton(
         onPressed: (){},
@@ -50,4 +55,24 @@ bottomNavigationBar: BubbleBottomBar(
             BubbleBottomBarItem(backgroundColor: Colors.green, icon: Icon(Icons.menu, color: Colors.black,), activeIcon: Icon(Icons.menu, color: Colors.green,), title: Text("Menu"))
         ],
       ),
+```
+
+## Show Badge
+
+```dart
+BubbleBottomBarItem(
+  showBadge: true,
+  badge: Text("5"),
+  badgeColor: Colors.deepPurpleAccent,
+  backgroundColor: Colors.red,
+  icon: Icon(
+    Icons.dashboard,
+    color: Colors.black,
+  ),
+  activeIcon: Icon(
+    Icons.dashboard,
+    color: Colors.red,
+  ),
+  title: Text("Home"),
+)
 ```

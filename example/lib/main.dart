@@ -63,16 +63,20 @@ class _MyHomePageState extends State<MyHomePage> {
         elevation: 8,
         items: <BubbleBottomBarItem>[
           BubbleBottomBarItem(
-              backgroundColor: Colors.red,
-              icon: Icon(
-                Icons.dashboard,
-                color: Colors.black,
-              ),
-              activeIcon: Icon(
-                Icons.dashboard,
-                color: Colors.red,
-              ),
-              title: Text("Home")),
+            showBadge: true,
+            badge: Text("5"),
+            badgeColor: Colors.deepPurpleAccent,
+            backgroundColor: Colors.red,
+            icon: Icon(
+              Icons.dashboard,
+              color: Colors.black,
+            ),
+            activeIcon: Icon(
+              Icons.dashboard,
+              color: Colors.red,
+            ),
+            title: Text("Home"),
+          ),
           BubbleBottomBarItem(
               backgroundColor: Colors.deepPurple,
               icon: Icon(
