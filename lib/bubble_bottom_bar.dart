@@ -24,13 +24,14 @@ class BubbleBottomBar extends StatefulWidget {
       this.hasNotch = false,
       this.hasInk = false,
       this.inkColor,
-      this.fabLocation})
+      this.fabLocation,
+      this.itemHeight})
       : assert(items != null),
         assert(items.length >= 2),
         assert(
-            items.every((BubbleBottomBarItem item) => item.title != null) ==
-                true,
-            'Every item must have a non-null title',),
+          items.every((BubbleBottomBarItem item) => item.title != null) == true,
+          'Every item must have a non-null title',
+        ),
         assert(0 <= currentIndex && currentIndex < items.length),
         assert(iconSize != null),
         super(key: key);
@@ -47,6 +48,7 @@ class BubbleBottomBar extends StatefulWidget {
   final bool hasInk;
   final BubbleBottomBarFabLocation fabLocation;
   final Color inkColor;
+  final double itemHeight;
 
   @override
   _BottomNavigationBarState createState() => _BottomNavigationBarState();
@@ -61,7 +63,9 @@ class _BottomNavigationTile extends StatelessWidget {
       this.selected = false,
       this.indexLabel,
       this.ink = false,
-      this.inkColor})
+      this.inkColor,
+      this.borderRadius,
+      this.height})
       : assert(selected != null);
 
   final BubbleBottomBarItem item;
@@ -75,6 +79,8 @@ class _BottomNavigationTile extends StatelessWidget {
   final double opacity;
   final bool ink;
   final Color inkColor;
+  final BorderRadiusGeometry borderRadius;
+  final double height;
 
   @override
   Widget build(BuildContext context) {
@@ -96,10 +102,11 @@ class _BottomNavigationTile extends StatelessWidget {
         child: Stack(
           children: <Widget>[
             InkResponse(
-              borderRadius: BorderRadius.horizontal(
-                right: Radius.circular(50),
-                left: Radius.circular(50),
-              ),
+              borderRadius: borderRadius ??
+                  BorderRadius.horizontal(
+                    right: Radius.circular(50),
+                    left: Radius.circular(50),
+                  ),
               containedInkWell: true,
               onTap: onTap,
               splashColor: ink
@@ -107,15 +114,16 @@ class _BottomNavigationTile extends StatelessWidget {
                   : Colors.transparent,
               highlightColor: Colors.transparent,
               child: Container(
-                height: 48,
+                height: height ?? 48,
                 decoration: BoxDecoration(
                     color: selected
                         ? item.backgroundColor.withOpacity(opacity)
                         : Colors.transparent,
-                    borderRadius: BorderRadius.horizontal(
-                      right: Radius.circular(50),
-                      left: Radius.circular(50),
-                    )),
+                    borderRadius: borderRadius ??
+                        BorderRadius.horizontal(
+                          right: Radius.circular(50),
+                          left: Radius.circular(50),
+                        )),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: selected
@@ -340,6 +348,8 @@ class _BottomNavigationBarState extends State<BubbleBottomBar>
               tabIndex: i + 1, tabCount: widget.items.length),
           ink: widget.hasInk,
           inkColor: widget.inkColor,
+          borderRadius: widget.items[i].borderRadius,
+          height: widget.items[i].height ?? widget.itemHeight,
         ),
       );
     }
@@ -425,17 +435,21 @@ class _BottomNavigationBarState extends State<BubbleBottomBar>
 }
 
 class BubbleBottomBarItem {
-  const BubbleBottomBarItem({
-    @required this.icon,
-    this.title,
-    Widget activeIcon,
-    this.backgroundColor,
-  })  : activeIcon = activeIcon ?? icon,
+  const BubbleBottomBarItem(
+      {@required this.icon,
+      this.title,
+      Widget activeIcon,
+      this.backgroundColor,
+      this.borderRadius,
+      this.height})
+      : activeIcon = activeIcon ?? icon,
         assert(icon != null);
   final Widget icon;
   final Widget activeIcon;
   final Widget title;
   final Color backgroundColor;
+  final BorderRadiusGeometry borderRadius;
+  final double height;
 }
 
 class _BubbleBottomBarClipper extends CustomClipper<Path> {
