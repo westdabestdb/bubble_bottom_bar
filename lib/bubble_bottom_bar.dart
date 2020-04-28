@@ -25,7 +25,8 @@ class BubbleBottomBar extends StatefulWidget {
       this.hasInk = false,
       this.inkColor,
       this.fabLocation,
-      this.itemHeight})
+      this.itemHeight,
+      this.itemBorderRadius})
       : assert(items != null),
         assert(items.length >= 2),
         assert(
@@ -49,6 +50,7 @@ class BubbleBottomBar extends StatefulWidget {
   final BubbleBottomBarFabLocation fabLocation;
   final Color inkColor;
   final double itemHeight;
+  final BorderRadiusGeometry itemBorderRadius;
 
   @override
   _BottomNavigationBarState createState() => _BottomNavigationBarState();
@@ -348,7 +350,7 @@ class _BottomNavigationBarState extends State<BubbleBottomBar>
               tabIndex: i + 1, tabCount: widget.items.length),
           ink: widget.hasInk,
           inkColor: widget.inkColor,
-          borderRadius: widget.items[i].borderRadius,
+          borderRadius: widget.items[i].borderRadius ?? widget.itemBorderRadius,
           height: widget.items[i].height ?? widget.itemHeight,
         ),
       );
