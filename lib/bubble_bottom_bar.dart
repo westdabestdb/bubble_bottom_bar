@@ -5,6 +5,7 @@ import 'dart:math' as math;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:badges/badges.dart';
 
 const double _kActiveFontSize = 14.0;
 const double _kBottomMargin = 8.0;
@@ -28,9 +29,9 @@ class BubbleBottomBar extends StatefulWidget {
       : assert(items != null),
         assert(items.length >= 2),
         assert(
-            items.every((BubbleBottomBarItem item) => item.title != null) ==
-                true,
-            'Every item must have a non-null title',),
+          items.every((BubbleBottomBarItem item) => item.title != null) == true,
+          'Every item must have a non-null title',
+        ),
         assert(0 <= currentIndex && currentIndex < items.length),
         assert(iconSize != null),
         super(key: key);
@@ -179,13 +180,19 @@ class _TileIcon extends StatelessWidget {
     return Align(
       alignment: Alignment.topCenter,
       heightFactor: 1.0,
-      child: Container(
-        child: IconTheme(
-          data: IconThemeData(
-            color: selected ? item.backgroundColor : iconColor,
-            size: iconSize,
+      child: Badge(
+        showBadge: item.showBadge,
+        badgeContent: item.badge,
+        badgeColor: item.badgeColor,
+        animationType: BadgeAnimationType.fade,
+        child: Container(
+          child: IconTheme(
+            data: IconThemeData(
+              color: selected ? item.backgroundColor : iconColor,
+              size: iconSize,
+            ),
+            child: selected ? item.activeIcon : item.icon,
           ),
-          child: selected ? item.activeIcon : item.icon,
         ),
       ),
     );
@@ -429,12 +436,18 @@ class BubbleBottomBarItem {
     @required this.icon,
     this.title,
     Widget activeIcon,
+    this.showBadge = false,
+    this.badgeColor = Colors.black,
+    this.badge,
     this.backgroundColor,
   })  : activeIcon = activeIcon ?? icon,
         assert(icon != null);
   final Widget icon;
   final Widget activeIcon;
   final Widget title;
+  final bool showBadge;
+  final Color badgeColor;
+  final Widget badge; // The content of badge. Usually Text or Icon.
   final Color backgroundColor;
 }
 
