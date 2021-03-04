@@ -58,9 +58,12 @@ class _MyHomePageState extends State<MyHomePage> {
         currentIndex: currentIndex,
         onTap: changePage,
         borderRadius: BorderRadius.vertical(
-            top: Radius.circular(
-                16)), //border radius doesn't work when the notch is enabled.
+          top: Radius.circular(16),
+        ), //border radius doesn't work when the notch is enabled.
         elevation: 8,
+        tilesPadding: EdgeInsets.symmetric(
+          vertical: 8.0,
+        ),
         items: <BubbleBottomBarItem>[
           BubbleBottomBarItem(
             showBadge: true,
