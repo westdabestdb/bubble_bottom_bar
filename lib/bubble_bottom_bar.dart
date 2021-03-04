@@ -11,22 +11,24 @@ const double _kActiveFontSize = 14.0;
 const double _kBottomMargin = 8.0;
 enum BubbleBottomBarFabLocation { end, center }
 
+// ignore: must_be_immutable
 class BubbleBottomBar extends StatefulWidget {
-  BubbleBottomBar(
-      {Key key,
-      @required this.items,
-      this.onTap,
-      this.currentIndex = 0,
-      @required this.opacity,
-      this.iconSize = 24.0,
-      this.borderRadius,
-      this.elevation,
-      this.backgroundColor,
-      this.hasNotch = false,
-      this.hasInk = false,
-      this.inkColor,
-      this.fabLocation})
-      : assert(items != null),
+  BubbleBottomBar({
+    Key key,
+    @required this.items,
+    this.onTap,
+    this.currentIndex = 0,
+    @required this.opacity,
+    this.iconSize = 24.0,
+    this.borderRadius,
+    this.elevation,
+    this.backgroundColor,
+    this.hasNotch = false,
+    this.hasInk = false,
+    this.inkColor,
+    this.fabLocation,
+    this.tilesPadding = EdgeInsets.zero,
+  })  : assert(items != null),
         assert(items.length >= 2),
         assert(
           items.every((BubbleBottomBarItem item) => item.title != null) == true,
@@ -48,6 +50,7 @@ class BubbleBottomBar extends StatefulWidget {
   final bool hasInk;
   final BubbleBottomBarFabLocation fabLocation;
   final Color inkColor;
+  final EdgeInsets tilesPadding;
 
   @override
   _BottomNavigationBarState createState() => _BottomNavigationBarState();
@@ -55,15 +58,19 @@ class BubbleBottomBar extends StatefulWidget {
 
 class _BottomNavigationTile extends StatelessWidget {
   const _BottomNavigationTile(
-      this.item, this.opacity, this.animation, this.iconSize,
-      {this.onTap,
-      this.colorTween,
-      this.flex,
-      this.selected = false,
-      this.indexLabel,
-      this.ink = false,
-      this.inkColor})
-      : assert(selected != null);
+    this.item,
+    this.opacity,
+    this.animation,
+    this.iconSize, {
+    this.onTap,
+    this.colorTween,
+    this.flex,
+    this.selected = false,
+    this.indexLabel,
+    this.ink = false,
+    this.inkColor,
+    this.padding,
+  }) : assert(selected != null);
 
   final BubbleBottomBarItem item;
   final Animation<double> animation;
@@ -76,6 +83,7 @@ class _BottomNavigationTile extends StatelessWidget {
   final double opacity;
   final bool ink;
   final Color inkColor;
+  final EdgeInsets padding;
 
   @override
   Widget build(BuildContext context) {
@@ -96,54 +104,59 @@ class _BottomNavigationTile extends StatelessWidget {
         selected: selected,
         child: Stack(
           children: <Widget>[
-            InkResponse(
-              borderRadius: BorderRadius.horizontal(
-                right: Radius.circular(50),
-                left: Radius.circular(50),
-              ),
-              containedInkWell: true,
-              onTap: onTap,
-              splashColor: ink
-                  ? inkColor != null ? inkColor : Theme.of(context).splashColor
-                  : Colors.transparent,
-              highlightColor: Colors.transparent,
-              child: Container(
-                height: 48,
-                decoration: BoxDecoration(
-                    color: selected
-                        ? item.backgroundColor.withOpacity(opacity)
-                        : Colors.transparent,
-                    borderRadius: BorderRadius.horizontal(
-                      right: Radius.circular(50),
-                      left: Radius.circular(50),
-                    )),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: selected
-                      ? MainAxisAlignment.spaceEvenly
-                      : MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.max,
-                  children: <Widget>[
-                    _TileIcon(
-                      colorTween: colorTween,
-                      animation: animation,
-                      iconSize: iconSize,
-                      selected: selected,
-                      item: item,
-                    ),
-                    AnimatedCrossFade(
-                      alignment: Alignment(0, 0),
-                      firstChild: label,
-                      secondChild: Container(),
-                      duration: Duration(milliseconds: 200),
-                      sizeCurve: Curves.fastOutSlowIn,
-                      firstCurve: Curves.fastOutSlowIn,
-                      secondCurve: Curves.fastOutSlowIn.flipped,
-                      crossFadeState: selected
-                          ? CrossFadeState.showFirst
-                          : CrossFadeState.showSecond,
-                    )
-                  ],
+            Padding(
+              padding: padding,
+              child: InkResponse(
+                borderRadius: BorderRadius.horizontal(
+                  right: Radius.circular(50),
+                  left: Radius.circular(50),
+                ),
+                containedInkWell: true,
+                onTap: onTap,
+                splashColor: ink
+                    ? inkColor != null
+                        ? inkColor
+                        : Theme.of(context).splashColor
+                    : Colors.transparent,
+                highlightColor: Colors.transparent,
+                child: Container(
+                  height: 48,
+                  decoration: BoxDecoration(
+                      color: selected
+                          ? item.backgroundColor.withOpacity(opacity)
+                          : Colors.transparent,
+                      borderRadius: BorderRadius.horizontal(
+                        right: Radius.circular(50),
+                        left: Radius.circular(50),
+                      )),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: selected
+                        ? MainAxisAlignment.spaceEvenly
+                        : MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.max,
+                    children: <Widget>[
+                      _TileIcon(
+                        colorTween: colorTween,
+                        animation: animation,
+                        iconSize: iconSize,
+                        selected: selected,
+                        item: item,
+                      ),
+                      AnimatedCrossFade(
+                        alignment: Alignment(0, 0),
+                        firstChild: label,
+                        secondChild: Container(),
+                        duration: Duration(milliseconds: 200),
+                        sizeCurve: Curves.fastOutSlowIn,
+                        firstCurve: Curves.fastOutSlowIn,
+                        secondCurve: Curves.fastOutSlowIn.flipped,
+                        crossFadeState: selected
+                            ? CrossFadeState.showFirst
+                            : CrossFadeState.showSecond,
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -347,6 +360,7 @@ class _BottomNavigationBarState extends State<BubbleBottomBar>
               tabIndex: i + 1, tabCount: widget.items.length),
           ink: widget.hasInk,
           inkColor: widget.inkColor,
+          padding: widget.tilesPadding,
         ),
       );
     }
