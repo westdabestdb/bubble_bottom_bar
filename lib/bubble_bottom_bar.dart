@@ -14,11 +14,11 @@ enum BubbleBottomBarFabLocation { end, center }
 // ignore: must_be_immutable
 class BubbleBottomBar extends StatefulWidget {
   BubbleBottomBar({
-    Key key,
-    @required this.items,
+    Key? key,
+    required this.items,
     this.onTap,
     this.currentIndex = 0,
-    @required this.opacity,
+    required this.opacity,
     this.iconSize = 24.0,
     this.borderRadius,
     this.elevation,
@@ -28,28 +28,27 @@ class BubbleBottomBar extends StatefulWidget {
     this.inkColor,
     this.fabLocation,
     this.tilesPadding = EdgeInsets.zero,
-  })  : assert(items != null),
-        assert(items.length >= 2),
+  })  : assert(items.length >= 2),
         assert(
           items.every((BubbleBottomBarItem item) => item.title != null) == true,
           'Every item must have a non-null title',
         ),
-        assert(0 <= currentIndex && currentIndex < items.length),
+        assert(0 <= currentIndex! && currentIndex < items.length),
         assert(iconSize != null),
         super(key: key);
 
   final List<BubbleBottomBarItem> items;
-  final ValueChanged<int> onTap;
-  int currentIndex;
-  final double iconSize;
+  final ValueChanged<int?>? onTap;
+  int? currentIndex;
+  final double? iconSize;
   final double opacity;
-  final BorderRadius borderRadius;
-  final double elevation;
-  final Color backgroundColor;
+  final BorderRadius? borderRadius;
+  final double? elevation;
+  final Color? backgroundColor;
   final bool hasNotch;
   final bool hasInk;
-  final BubbleBottomBarFabLocation fabLocation;
-  final Color inkColor;
+  final BubbleBottomBarFabLocation? fabLocation;
+  final Color? inkColor;
   final EdgeInsets tilesPadding;
 
   @override
@@ -70,30 +69,30 @@ class _BottomNavigationTile extends StatelessWidget {
     this.ink = false,
     this.inkColor,
     this.padding,
-  }) : assert(selected != null);
+  });
 
   final BubbleBottomBarItem item;
   final Animation<double> animation;
   final double iconSize;
-  final VoidCallback onTap;
-  final ColorTween colorTween;
-  final double flex;
+  final VoidCallback? onTap;
+  final ColorTween? colorTween;
+  final double? flex;
   final bool selected;
-  final String indexLabel;
+  final String? indexLabel;
   final double opacity;
   final bool ink;
-  final Color inkColor;
-  final EdgeInsets padding;
+  final Color? inkColor;
+  final EdgeInsets? padding;
 
   @override
   Widget build(BuildContext context) {
     int size;
     Widget label;
-    size = (flex * 1000.0).round();
+    size = (flex! * 1000.0).round();
     label = _Label(
       animation: animation,
       item: item,
-      color: item.backgroundColor,
+      color: item.backgroundColor!,
     );
 
     return Expanded(
@@ -105,7 +104,7 @@ class _BottomNavigationTile extends StatelessWidget {
         child: Stack(
           children: <Widget>[
             Padding(
-              padding: padding,
+              padding: padding!,
               child: InkResponse(
                 borderRadius: BorderRadius.horizontal(
                   right: Radius.circular(50),
@@ -123,7 +122,7 @@ class _BottomNavigationTile extends StatelessWidget {
                   height: 48,
                   decoration: BoxDecoration(
                       color: selected
-                          ? item.backgroundColor.withOpacity(opacity)
+                          ? item.backgroundColor!.withOpacity(opacity)
                           : Colors.transparent,
                       borderRadius: BorderRadius.horizontal(
                         right: Radius.circular(50),
@@ -137,7 +136,7 @@ class _BottomNavigationTile extends StatelessWidget {
                     mainAxisSize: MainAxisSize.max,
                     children: <Widget>[
                       _TileIcon(
-                        colorTween: colorTween,
+                        colorTween: colorTween ?? ColorTween(),
                         animation: animation,
                         iconSize: iconSize,
                         selected: selected,
@@ -172,12 +171,12 @@ class _BottomNavigationTile extends StatelessWidget {
 
 class _TileIcon extends StatelessWidget {
   const _TileIcon({
-    Key key,
-    @required this.colorTween,
-    @required this.animation,
-    @required this.iconSize,
-    @required this.selected,
-    @required this.item,
+    Key? key,
+    required this.colorTween,
+    required this.animation,
+    required this.iconSize,
+    required this.selected,
+    required this.item,
   }) : super(key: key);
 
   final ColorTween colorTween;
@@ -204,7 +203,7 @@ class _TileIcon extends StatelessWidget {
               color: selected ? item.backgroundColor : iconColor,
               size: iconSize,
             ),
-            child: selected ? item.activeIcon : item.icon,
+            child: selected ? item.activeIcon! : item.icon,
           ),
         ),
       ),
@@ -214,10 +213,10 @@ class _TileIcon extends StatelessWidget {
 
 class _Label extends StatelessWidget {
   _Label({
-    Key key,
-    @required this.animation,
-    @required this.item,
-    @required this.color,
+    Key? key,
+    required this.animation,
+    required this.item,
+    required this.color,
   }) : super(key: key);
 
   final Animation<double> animation;
@@ -239,7 +238,7 @@ class _Label extends StatelessWidget {
               fontWeight: FontWeight.w600,
               color: color,
             ),
-            child: item.title,
+            child: item.title!,
           ),
         ),
       ),
@@ -249,13 +248,13 @@ class _Label extends StatelessWidget {
 
 class _BottomNavigationBarState extends State<BubbleBottomBar>
     with TickerProviderStateMixin {
-  List<AnimationController> _controllers = <AnimationController>[];
-  List<CurvedAnimation> _animations;
-  Color _backgroundColor;
-  ValueListenable<ScaffoldGeometry> geometryListenable;
+  late List<AnimationController> _controllers = <AnimationController>[];
+  late List<CurvedAnimation> _animations;
+  Color? _backgroundColor;
+  ValueListenable<ScaffoldGeometry>? geometryListenable;
   bool fabExists = false;
-  BubbleBottomBar holder;
-  Animatable<double> _flexTween;
+  BubbleBottomBar? holder;
+  Animatable<double>? _flexTween;
 
   @override
   void didChangeDependencies() {
@@ -286,8 +285,8 @@ class _BottomNavigationBarState extends State<BubbleBottomBar>
         reverseCurve: Curves.fastOutSlowIn.flipped,
       );
     });
-    _controllers[widget.currentIndex].value = 1.0;
-    _backgroundColor = widget.items[widget.currentIndex].backgroundColor;
+    _controllers[widget.currentIndex!].value = 1.0;
+    _backgroundColor = widget.items[widget.currentIndex!].backgroundColor;
   }
 
   @override
@@ -307,7 +306,7 @@ class _BottomNavigationBarState extends State<BubbleBottomBar>
   }
 
   double _evaluateFlex(Animation<double> animation) =>
-      _flexTween.evaluate(animation);
+      _flexTween!.evaluate(animation);
 
   @override
   void didUpdateWidget(BubbleBottomBar oldWidget) {
@@ -319,28 +318,28 @@ class _BottomNavigationBarState extends State<BubbleBottomBar>
     }
 
     if (widget.currentIndex != oldWidget.currentIndex) {
-      _controllers[oldWidget.currentIndex].reverse();
-      _controllers[widget.currentIndex].forward();
+      _controllers[oldWidget.currentIndex!].reverse();
+      _controllers[widget.currentIndex!].forward();
 
       if (widget.fabLocation == BubbleBottomBarFabLocation.center) {
-        BubbleBottomBarItem _currentItem = widget.items[oldWidget.currentIndex];
-        BubbleBottomBarItem _nextItem = widget.items[widget.currentIndex];
+        BubbleBottomBarItem _currentItem = widget.items[oldWidget.currentIndex!];
+        BubbleBottomBarItem _nextItem = widget.items[widget.currentIndex!];
 
         widget.items[0] = _nextItem;
-        widget.items[widget.currentIndex] = _currentItem;
-        _controllers[oldWidget.currentIndex].reverse();
-        _controllers[widget.currentIndex].forward();
+        widget.items[widget.currentIndex!] = _currentItem;
+        _controllers[oldWidget.currentIndex!].reverse();
+        _controllers[widget.currentIndex!].forward();
         widget.currentIndex = 0;
         _resetState();
       }
     } else {
-      if (_backgroundColor != widget.items[widget.currentIndex].backgroundColor)
-        _backgroundColor = widget.items[widget.currentIndex].backgroundColor;
+      if (_backgroundColor != widget.items[widget.currentIndex!].backgroundColor)
+        _backgroundColor = widget.items[widget.currentIndex!].backgroundColor;
     }
   }
 
   List<Widget> _createTiles() {
-    final MaterialLocalizations localizations =
+    final MaterialLocalizations? localizations =
         MaterialLocalizations.of(context);
     assert(localizations != null);
     final List<Widget> children = <Widget>[];
@@ -350,13 +349,13 @@ class _BottomNavigationBarState extends State<BubbleBottomBar>
           widget.items[i],
           widget.opacity,
           _animations[i],
-          widget.iconSize,
+          widget.iconSize!,
           onTap: () {
-            if (widget.onTap != null) widget.onTap(i);
+            if (widget.onTap != null) widget.onTap!(i);
           },
           flex: _evaluateFlex(_animations[i]),
           selected: i == widget.currentIndex,
-          indexLabel: localizations.tabLabel(
+          indexLabel: localizations!.tabLabel(
               tabIndex: i + 1, tabCount: widget.items.length),
           ink: widget.hasInk,
           inkColor: widget.inkColor,
@@ -421,19 +420,17 @@ class _BottomNavigationBarState extends State<BubbleBottomBar>
         explicitChildNodes: true,
         child: widget.hasNotch
             ? PhysicalShape(
-                elevation: widget.elevation != null ? widget.elevation : 8.0,
-                color: widget.backgroundColor != null
-                    ? widget.backgroundColor
-                    : Colors.white,
+                elevation: widget.elevation ?? 8.0,
+                color: widget.backgroundColor ?? Colors.white,
                 clipper: _BubbleBottomBarClipper(
                   shape: CircularNotchedRectangle(),
-                  geometry: geometryListenable,
+                  geometry: geometryListenable!,
                   notchMargin: 8,
                 ),
                 child: _inner(additionalBottomPadding),
               )
             : Material(
-                elevation: widget.elevation != null ? widget.elevation : 8.0,
+                elevation: widget.elevation ?? 8.0,
                 color: widget.backgroundColor != null
                     ? widget.backgroundColor
                     : Colors.white,
@@ -447,33 +444,30 @@ class _BottomNavigationBarState extends State<BubbleBottomBar>
 
 class BubbleBottomBarItem {
   const BubbleBottomBarItem({
-    @required this.icon,
+    required this.icon,
+    required this.activeIcon,
     this.title,
-    Widget activeIcon,
     this.showBadge = false,
     this.badgeColor = Colors.black,
     this.badge,
     this.backgroundColor,
-  })  : activeIcon = activeIcon ?? icon,
-        assert(icon != null);
+  });
+
   final Widget icon;
-  final Widget activeIcon;
-  final Widget title;
+  final Widget? activeIcon;
+  final Widget? title;
   final bool showBadge;
   final Color badgeColor;
-  final Widget badge; // The content of badge. Usually Text or Icon.
-  final Color backgroundColor;
+  final Widget? badge; // The content of badge. Usually Text or Icon.
+  final Color? backgroundColor;
 }
 
 class _BubbleBottomBarClipper extends CustomClipper<Path> {
   const _BubbleBottomBarClipper({
-    @required this.geometry,
-    @required this.shape,
-    @required this.notchMargin,
-  })  : assert(geometry != null),
-        assert(shape != null),
-        assert(notchMargin != null),
-        super(reclip: geometry);
+    required this.geometry,
+    required this.shape,
+    required this.notchMargin,
+  })  : super(reclip: geometry);
 
   final ValueListenable<ScaffoldGeometry> geometry;
   final NotchedShape shape;
@@ -481,9 +475,9 @@ class _BubbleBottomBarClipper extends CustomClipper<Path> {
 
   @override
   Path getClip(Size size) {
-    final Rect button = geometry.value.floatingActionButtonArea?.translate(
+    final Rect? button = geometry.value.floatingActionButtonArea?.translate(
       0.0,
-      geometry.value.bottomNavigationBarTop * -1.0,
+      geometry.value.bottomNavigationBarTop! * -1.0,
     );
 
     return shape.getOuterPath(Offset.zero & size, button?.inflate(notchMargin));
