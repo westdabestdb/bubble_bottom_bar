@@ -18,14 +18,15 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({Key? key, required this.title}) : super(key: key);
   final String title;
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int currentIndex;
+  late int currentIndex;
+  
   @override
   void initState() {
     // TODO: implement initState
@@ -33,9 +34,9 @@ class _MyHomePageState extends State<MyHomePage> {
     currentIndex = 0;
   }
 
-  void changePage(int index) {
+  void changePage(int? index) {
     setState(() {
-      currentIndex = index;
+      currentIndex = index!;
     });
   }
 
