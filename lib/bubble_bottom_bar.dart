@@ -3,12 +3,12 @@ library bubble_bottom_bar;
 import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:badges/badges.dart';
+import 'package:badges/badges.dart' as badges;
 
 const double _kActiveFontSize = 14.0;
 const double _kBottomMargin = 8.0;
+
 enum BubbleBottomBarFabLocation { end, center }
 
 // ignore: must_be_immutable
@@ -62,7 +62,7 @@ class _BottomNavigationTile extends StatelessWidget {
     this.animation,
     this.iconSize, {
     this.onTap,
-    this.colorTween,
+    // this.colorTween,
     this.flex,
     this.selected = false,
     this.indexLabel,
@@ -75,7 +75,7 @@ class _BottomNavigationTile extends StatelessWidget {
   final Animation<double> animation;
   final double iconSize;
   final VoidCallback? onTap;
-  final ColorTween? colorTween;
+  // final ColorTween? colorTween;
   final double? flex;
   final bool selected;
   final String? indexLabel;
@@ -136,7 +136,7 @@ class _BottomNavigationTile extends StatelessWidget {
                     mainAxisSize: MainAxisSize.max,
                     children: <Widget>[
                       _TileIcon(
-                        colorTween: colorTween ?? ColorTween(),
+                        colorTween: ColorTween(),
                         animation: animation,
                         iconSize: iconSize,
                         selected: selected,
@@ -192,11 +192,11 @@ class _TileIcon extends StatelessWidget {
     return Align(
       alignment: Alignment.topCenter,
       heightFactor: 1.0,
-      child: Badge(
+      child: badges.Badge(
         showBadge: item.showBadge,
         badgeContent: item.badge,
         badgeColor: item.badgeColor,
-        animationType: BadgeAnimationType.fade,
+        animationType: badges.BadgeAnimationType.fade,
         child: Container(
           child: IconTheme(
             data: IconThemeData(
@@ -322,7 +322,8 @@ class _BottomNavigationBarState extends State<BubbleBottomBar>
       _controllers[widget.currentIndex!].forward();
 
       if (widget.fabLocation == BubbleBottomBarFabLocation.center) {
-        BubbleBottomBarItem _currentItem = widget.items[oldWidget.currentIndex!];
+        BubbleBottomBarItem _currentItem =
+            widget.items[oldWidget.currentIndex!];
         BubbleBottomBarItem _nextItem = widget.items[widget.currentIndex!];
 
         widget.items[0] = _nextItem;
@@ -333,7 +334,8 @@ class _BottomNavigationBarState extends State<BubbleBottomBar>
         _resetState();
       }
     } else {
-      if (_backgroundColor != widget.items[widget.currentIndex!].backgroundColor)
+      if (_backgroundColor !=
+          widget.items[widget.currentIndex!].backgroundColor)
         _backgroundColor = widget.items[widget.currentIndex!].backgroundColor;
     }
   }
@@ -355,8 +357,8 @@ class _BottomNavigationBarState extends State<BubbleBottomBar>
           },
           flex: _evaluateFlex(_animations[i]),
           selected: i == widget.currentIndex,
-          indexLabel: localizations!.tabLabel(
-              tabIndex: i + 1, tabCount: widget.items.length),
+          indexLabel: localizations!
+              .tabLabel(tabIndex: i + 1, tabCount: widget.items.length),
           ink: widget.hasInk,
           inkColor: widget.inkColor,
           padding: widget.tilesPadding,
@@ -467,7 +469,7 @@ class _BubbleBottomBarClipper extends CustomClipper<Path> {
     required this.geometry,
     required this.shape,
     required this.notchMargin,
-  })  : super(reclip: geometry);
+  }) : super(reclip: geometry);
 
   final ValueListenable<ScaffoldGeometry> geometry;
   final NotchedShape shape;
